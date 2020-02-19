@@ -15,8 +15,8 @@ class Post(models.Model):
 
 class Pic(models.Model):
     pic_post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    pic_comment_id = models.ForeignKey(Comments, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='media/photos/users')
+    # pic_comment_id = models.ForeignKey(Comments, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='photos/users')
 
 def user_vid_directory_path(instance, filename):
     print(instance)

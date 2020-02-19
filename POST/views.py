@@ -1,11 +1,8 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-
 from POST.models import Pic
-
 from POST.models import Post
-
 
 def Login(request):
     error_msg = ''
@@ -20,7 +17,7 @@ def Login(request):
         print(user)
         account = User.objects.get(username=username)
         id = int(account.id)
-        return render(request, 'post.html')
+        return redirect('/post/%d/'% id)
     else:
         if username != None:
             error_msg='Username or password is wrong!'
@@ -48,21 +45,24 @@ def Logout(request):
     logout(request)
     return render(request, 'login.html')
 
-def post(request):
+def post(request, user_id):
     if request.method == "POST":
-        post_content = request.Post.get('content')
-        post=Post.objects.create(post_text=post_content)
+        post_content = request.POST.get('content')
+        user = User.objects.get(id=user_id)
+        post = Post.objects.create(post_text=post_content, user_id=user)
         print(post)
         post.save()
-        pic_post_id = Post.objects.get(post_text=post_content).id
-        img = Pic(image=request.FILES.get('img'), pic_post_id=pic_post_id)
+        id = Post.objects.get(post_text=post_content)
+        img = Pic(image=request.FILES.get('img'), pic_post_id=id)
         print(img)
         img.save()
-    return redirect('show/')
+        return redirect('/show/%d/'% user_id)
+    else:
+        user = User.objects.get(id=user_id)
+        return render(request, 'post.html', {'user': user})
 
-def show(request):
-    imgs = Pic.objects.all()
-    context = {
-        'imgs':imgs
-    }
-    return render(request, 'show.html', context)
+def show(request, user_id):
+    texts = Post.objects.get(user_id=user_id)
+    imgs = Pic.objects.get(pic_post_id=texts.id)
+    print(imgs)
+    return render(request, 'show.html', {'img':imgs, 'text':texts})

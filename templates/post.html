@@ -5,9 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-    <form method="POST" action="post/" enctype="multipart/form-data">
+     <h1 align="center" style="color:Pink">Welcome! {{ user.username }}</h1>
+     <hr/>
+    <form method="POST" action="/post/{{ user.id }}/" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" name="content">
+        <input type="text" name="content" placeholder="your words">
         <input type="file" name="img">
         <button type="submit">Submit</button>
     </form>

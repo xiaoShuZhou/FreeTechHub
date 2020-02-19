@@ -5,8 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-    {% for item in imgs %}
-        <img src="{{ item.image.url" }}><br>
+    {% for content in text %}
+        <li>{{ content.post_text }}</li>
+        {% for item in img %}
+            <img src="{{ item.image.url }}" />
+        {% endfor %}
     {% endfor %}
 </body>
 </html>

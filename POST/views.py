@@ -7,9 +7,7 @@ from POST.models import Post
 def Login(request):
     error_msg = ''
     username = request.POST.get('username')
-    print(username)
     password = request.POST.get('password')
-    print(password)
     user=authenticate(username=username, password=password)
     print(user)
     if user:
@@ -50,19 +48,24 @@ def post(request, user_id):
         post_content = request.POST.get('content')
         user = User.objects.get(id=user_id)
         post = Post.objects.create(post_text=post_content, user_id=user)
-        print(post)
         post.save()
         id = Post.objects.get(post_text=post_content)
-        img = Pic(image=request.FILES.get('img'), pic_post_id=id)
-        print(img)
-        img.save()
+        files = request.FILES.getlist('img')
+        for file in files:
+            img = Pic(image=file, pic_post_id=id)
+            img.save()
         return redirect('/show/%d/'% user_id)
     else:
         user = User.objects.get(id=user_id)
         return render(request, 'post.html', {'user': user})
 
 def show(request, user_id):
-    texts = Post.objects.get(user_id=user_id)
-    imgs = Pic.objects.get(pic_post_id=texts.id)
-    print(imgs)
-    return render(request, 'show.html', {'img':imgs, 'text':texts})
+    texts = Post.objects.filter(user_id=user_id)
+    print(type(texts), len(texts), texts[0])
+    text=[]
+    img=[]
+    for i in range(len(texts)):
+        text.append(texts[i])
+        imgs = Pic.objects.filter(pic_post_id=texts[i].id)
+        img.append(imgs)
+    return render(request, 'show.html', {'img':imgs, 'text':text})

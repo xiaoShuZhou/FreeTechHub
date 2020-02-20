@@ -41,3 +41,4 @@ def Postlikes(request,post_id,like_type):
 
     else:
         HttpResponseRedirect('login/')
+

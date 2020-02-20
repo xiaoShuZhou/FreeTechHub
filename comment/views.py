@@ -24,8 +24,3 @@ def comment(request,post_id):
         form = CommentForm()
 
     return render(request, 'comment.html', {'form': form})
-
-
-
-
-

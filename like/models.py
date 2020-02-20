@@ -19,5 +19,3 @@ class Likes(models.Model):
 # ContentType = ContentType(app_label,model_name) -- 从而得到contenttype
 # content_object = object_id + contenttype
 
-
-

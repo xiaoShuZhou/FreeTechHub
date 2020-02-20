@@ -9,8 +9,11 @@
      <hr/>
     <form method="POST" action="/post/{{ user.id }}/" enctype="multipart/form-data">
         {% csrf_token %}
-        <input type="text" name="content" placeholder="your words"/>
-        <input type="file" name="img" multiple="multiple"/>
+        <input type="text" name="content" placeholder="your words"/><br/>
+        <h3>Please choose pictures</h3>
+        <input type="file" name="img" multiple="multiple"/><br/>
+        <h3>Please choose your video</h3>
+        <input type="file" name="video" multiple="multiple"><br/>
         <button type="submit">Submit</button>
     </form>
 </body>

@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from POST.models import Pic
 from POST.models import Post
+from POST.models import Video
+
 
 def Login(request):
     error_msg = ''
@@ -47,25 +49,43 @@ def post(request, user_id):
     if request.method == "POST":
         post_content = request.POST.get('content')
         user = User.objects.get(id=user_id)
-        post = Post.objects.create(post_text=post_content, user_id=user)
+        post = Post.objects.create(post_text=post_content, user=user)
         post.save()
         id = Post.objects.get(post_text=post_content)
-        files = request.FILES.getlist('img')
-        for file in files:
-            img = Pic(image=file, pic_post_id=id)
+        files1 = request.FILES.getlist('img')
+        for file in files1:
+            img = Pic(image=file, post=id)
             img.save()
+        files2 = request.FILES.getlist('video')
+        for file in files2:
+            vid = Video(content=file, post=id)
+            vid.save()
         return redirect('/show/%d/'% user_id)
     else:
         user = User.objects.get(id=user_id)
         return render(request, 'post.html', {'user': user})
 
 def show(request, user_id):
-    texts = Post.objects.filter(user_id=user_id)
-    print(type(texts), len(texts), texts[0])
+    texts = Post.objects.filter(user=user_id)
     text=[]
     img=[]
+    video=[]
     for i in range(len(texts)):
         text.append(texts[i])
-        imgs = Pic.objects.filter(pic_post_id=texts[i].id)
-        img.append(imgs)
-    return render(request, 'show.html', {'img':imgs, 'text':text})
+        imgs = Pic.objects.filter(post=texts[i].id)
+        if len(imgs) == 1:
+            img.append(imgs[0])
+        if len(imgs) == 0:
+            img.append(None)
+        if len(imgs) >= 2:
+            for p in range(len(imgs)):
+                img.append(imgs[p])
+        videos = Video.objects.filter(post=texts[i].id)
+        if len(videos) == 1:
+            video.append(videos[0])
+        if len(videos) == 0:
+            video.append(None)
+        if len(videos) >=2:
+            for q in range(len(videos)):
+                video.append(videos[q])
+    return render(request, 'show.html', {'img': img, 'text': text, 'video':video})

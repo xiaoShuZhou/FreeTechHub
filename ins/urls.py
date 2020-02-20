@@ -15,7 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from like.views import Postlikes
+from comment.views import comment
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('<int:post_id>/<str:like_type>',Postlikes),
+    path('<int:post_id>',comment,name="comment_page")
 ]

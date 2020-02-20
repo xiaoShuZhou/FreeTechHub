@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Here for comment</title>
+</head>
+<body>
+<form action="{% url "comment_page" post_id %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
